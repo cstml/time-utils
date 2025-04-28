@@ -14,7 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: install clj
-      # run: sudo apt install clojure
       run: |
         curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh
         chmod +x linux-install.sh
