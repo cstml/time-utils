@@ -18,19 +18,24 @@
   [inst writer]
   (.write writer (str "#time/instant \"" (.toString inst) "\"")))
 
-(set! *data-readers*  (assoc *data-readers* 'time/instant #'parse-instant))
+(set! *data-readers* (assoc *data-readers* 'time/instant #'parse-instant))
 
-(s/def ::instant (s/with-gen jt/instant?
-                   (fn [] (gen/return
-                           (-> (jt/instant)
-                               (jt/+ (jt/days (rand-int 99999)))
-                               (jt/- (jt/days (rand-int 99999))))))))
+(s/def ::instant
+  (s/with-gen jt/instant?
+    (fn [] (gen/return
+            (-> (jt/instant)
+                (jt/+ (jt/days (rand-int 99999)))
+                (jt/- (jt/days (rand-int 99999))))))))
 
 (defn local-date []
   (LocalDate/now))
 
-(defn parse-local-date [local-date-str]
-  (LocalDate/parse local-date-str))
+(defn parse-local-date
+  ([local-date-str]
+   (LocalDate/parse local-date-str))
+  ([local-date-str pattern]
+   (LocalDate/parse local-date-str
+                    (java.time.format.DateTimeFormatter/ofPattern pattern))))
 
 (defmethod print-method LocalDate
   [dt writer]
@@ -42,26 +47,21 @@
 
 (set! *data-readers* (assoc *data-readers* 'time/local-date parse-local-date))
 
-(s/def ::local-date (s/with-gen jt/local-date?
-                      (fn [] (gen/return
-                             (-> (jt/local-date)
-                                 (jt/+ (jt/days (rand-int 99999)))
-                                 (jt/- (jt/days (rand-int 99999))))))))
+(s/def ::local-date
+  (s/with-gen jt/local-date?
+    (fn [] (gen/return
+            (-> (jt/local-date)
+                (jt/+ (jt/days (rand-int 99999)))
+                (jt/- (jt/days (rand-int 99999))))))))
 
 (defn instant->local-date [instant]
   (-> instant
       (.atZone (java.time.ZoneId/systemDefault))
       (.toLocalDate)))
 
-(defn local-date->instant
-  ([local-date]
+(defn local-date->instant ([local-date]
    (local-date->instant local-date (java.time.ZoneId/systemDefault)))
   ([local-date zone-id]
    (-> local-date
        (.atStartOfDay zone-id)
        (.toInstant))))
-
-(comment
-  (local-date->instant (instant->local-date (instant)))
-  ;; Example for parsing
-  (java.time.LocalDate/parse "2024/12/03" (java.time.format.DateTimeFormatter/ofPattern "yyyy/MM/dd")))

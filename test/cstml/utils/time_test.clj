@@ -22,3 +22,9 @@
                    (testing "can parse local-date"
                      (is (t/parse-local-date (str local-date)) )))]
     (check/quick-check 100 can-parse)))
+
+(deftest conversion
+  (is (t/local-date->instant (t/instant->local-date (t/instant)))))
+
+(deftest local-date-parser
+  (is (t/parse-local-date "2024/12/03" "yyyy/MM/dd")))
