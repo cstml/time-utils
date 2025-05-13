@@ -18,7 +18,7 @@
   [inst writer]
   (.write writer (str "#time/instant \"" (.toString inst) "\"")))
 
-(set! *data-readers* (assoc *data-readers* 'time/instant #'parse-instant))
+(alter-var-root #'*data-readers* assoc 'time/instant #'parse-instant)
 
 (s/def ::instant
   (s/with-gen jt/instant?
@@ -45,7 +45,7 @@
   [dt writer]
   (.write writer (str "#time/local-date \"" (.toString dt) "\"")))
 
-(set! *data-readers* (assoc *data-readers* 'time/local-date parse-local-date))
+(alter-var-root #'*data-readers* assoc 'time/local-date parse-local-date)
 
 (s/def ::local-date
   (s/with-gen jt/local-date?
