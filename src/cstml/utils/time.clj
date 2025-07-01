@@ -1,7 +1,8 @@
 (ns cstml.utils.time
   (:require [java-time.api :as jt]
             [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen])
+            [clojure.spec.gen.alpha :as gen]
+            [cstml.utils.time.cheshire])
   (:import [java.time Instant LocalDate]))
 
 (defn instant []
